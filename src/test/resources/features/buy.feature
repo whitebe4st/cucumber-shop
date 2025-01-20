@@ -15,3 +15,13 @@ Scenario: Buy multiple products
     When I buy "Bread" with quantity 2
     And I buy "Jam" with quantity 1
     Then total should be 121.00
+
+Scenario: Buy three products
+    When I buy "Bread" with quantity 1
+    And I buy "Jam" with quantity 2
+    And I buy "Bread" with quantity 1
+    Then total should be 201.50
+
+Scenario: Buy product with insufficient stock
+    When I buy "Bread" with quantity 6
+    Then I should get "Not enough stock" error message

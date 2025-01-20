@@ -10,6 +10,7 @@ public class BuyStepdefs {
 
     private ProductCatalog catalog;
     private Order order;
+    private String errorMessage;
 
     @Given("the store is ready to service customers")
     public void the_store_is_ready_to_service_customers() {
@@ -25,12 +26,22 @@ public class BuyStepdefs {
     @When("I buy {string} with quantity {int}")
     public void i_buy_with_quantity(String name, int quantity) {
         Product prod = catalog.getProduct(name);
-        order.addItem(prod, quantity);
+        try {
+            order.addItem(prod, quantity);
+            errorMessage = null;
+        } catch (IllegalArgumentException e) {
+            errorMessage = e.getMessage();
+        }
     }
 
     @Then("total should be {float}")
     public void total_should_be(double total) {
         assertEquals(total, order.getTotal());
+    }
+
+    @Then("I should get {string} error message")
+    public void i_should_get_error_message(String expectedError) {
+        assertEquals(expectedError, errorMessage);
     }
 }
 
